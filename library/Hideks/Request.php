@@ -45,6 +45,14 @@ class Request {
         
         $explode = explode(DS, $path);
         
+        foreach($explode as $key => $value){
+            if( empty($value) ){
+                unset($explode[$key]);
+            }
+        }
+        
+        sort($explode);
+        
         $this->controller = ucfirst($explode[0]);
         
         $action = ( !isset($explode[1]) || is_null($explode[1]) || $explode[1] === 'index' ) ? 'indexAction' : $explode[1];

@@ -1,4 +1,2 @@
-HideksFramework
+Hideks Framework 1.0 Release
 ===============
-
-Hideks Framework v1.0

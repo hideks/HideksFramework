@@ -40,10 +40,10 @@ class Request {
         if($route){
             $path = $route->getTarget().$route->getParams();
         } else {
-            $path = (isset($requestUrl)) ? $requestUrl : 'index'.DS.'index';
+            $path = (isset($requestUrl)) ? $requestUrl : 'index/index';
         }
         
-        $explode = explode(DS, $path);
+        $explode = explode('/', $path);
         
         foreach($explode as $key => $value){
             if( empty($value) ){

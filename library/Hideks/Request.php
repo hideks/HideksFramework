@@ -51,27 +51,31 @@ class Request {
             }
         }
         
-        sort($explode);
+        $parts = array();
         
-        $this->controller = ucfirst($explode[0]);
+        foreach($explode as $part){
+            $parts[] = $part;
+        }
         
-        $action = ( !isset($explode[1]) || is_null($explode[1]) || $explode[1] === 'index' ) ? 'indexAction' : $explode[1];
+        $this->controller = ucfirst($parts[0]);
+        
+        $action = ( !isset($parts[1]) || is_null($parts[1]) || $parts[1] === 'index' ) ? 'indexAction' : $parts[1];
         $action = ($action === 'indexAction') ? $action : $action.'Action';
         
         $this->action = $action;
         
-        unset($explode[0], $explode[1]);
+        unset($parts[0], $parts[1]);
         
-        if( is_null( end($explode) ) ){
-            array_pop($explode);
+        if( is_null( end($parts) ) ){
+            array_pop($parts);
         }
         
-        if( !empty($explode) ){
+        if( !empty($parts) ){
             $index = 0;
             $indexes = array();
             $values = array();
             
-            foreach($explode as $value){
+            foreach($parts as $value){
                 if($index % 2 == 0){
                     $indexes[] = $value;
                 } else {

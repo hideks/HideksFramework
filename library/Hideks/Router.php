@@ -21,14 +21,12 @@ class Router {
     }
     
     public function matchCurrentRequest() {
-        $_method        = filter_input(INPUT_POST, '_method');
+        $requestMethod  = $_SERVER['REQUEST_METHOD'];
         
-        $requestMethod  = filter_input(INPUT_SERVER, 'REQUEST_METHOD');
+        $requestUrl     = $_SERVER['REQUEST_URI'];
         
-        $requestUrl     = filter_input(INPUT_SERVER, 'REQUEST_URI');
-        
-        if( isset($_method) && strtoupper($_method) && in_array($_method, array('PUT','DELETE')) ){
-            $requestMethod = $_method;
+        if( isset($_POST['_method']) && strtoupper($_POST['_method']) && in_array($_POST['_method'], array('PUT','DELETE')) ){
+            $requestMethod = $_POST['_method'];
         } else {
             $requestMethod = $requestMethod;
         }

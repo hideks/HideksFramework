@@ -33,14 +33,14 @@ class Request {
     }
 
     public function dispatch(Router $router) {
-        $requestUrl = filter_input(INPUT_SERVER, 'REQUEST_URI');
+        $requestUrl = $_SERVER['REQUEST_URI'];
         
         $route = $router->matchCurrentRequest();
         
         if($route){
             $path = $route->getTarget().$route->getParams();
         } else {
-            $path = (isset($requestUrl)) ? $requestUrl : 'index/index';
+            $path = (isset($requestUrl) && $requestUrl !== '/') ? $requestUrl : 'index/index';
         }
         
         $explode = explode('/', $path);

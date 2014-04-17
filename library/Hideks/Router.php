@@ -6,18 +6,18 @@ class Router {
     
     private $_routes = array();
     
-    private $_basePath = '';
+    private $_baseurl = '';
     
     public function __construct(Router\Collection $collection) {
         $this->_routes = $collection;
     }
     
-    private function getBasePath() {
-        return $this->_basePath;
+    public function getRoutes() {
+        return $this->_routes;
     }
     
-    public function setBasePath($basePath) {
-        $this->_basePath = (string) $basePath;
+    public function setBaseUrl($baseurl) {
+        $this->_baseurl = (string) $baseurl;
     }
     
     public function matchCurrentRequest() {
@@ -46,7 +46,7 @@ class Router {
             
             $matches = array();
             
-            if (! preg_match("@^".$this->getBasePath().$routes->getRegex()."*$@i", $requestUrl, $matches)) {
+            if (! preg_match("@^".$this->_baseurl.$routes->getRegex()."*$@i", $requestUrl, $matches)) {
                 continue;
             }
             
@@ -76,9 +76,9 @@ class Router {
         return $params;
     }
     
-    public function _linkTo($routeName, array $params = array()) {
+    public function linkTo($routeName, array $params = array()) {
         if( !$this->_routes->exists($routeName) ){
-            throw new \Exception("No route with the name $routeName has been found.");
+            throw new \Exception("No route with the name $routeName has been found!!");
         }
         
         $route = $this->_routes->get($routeName);
@@ -100,10 +100,16 @@ class Router {
         return $url;
     }
     
-    public static function parseConfig($file) {
+    public static function parseFile() {
+        $file = APPLICATION_PATH.DS.'configs'.DS.'routes.ini';
+        
         $config = new \Hideks\Config\Ini($file);
         
         $routes = $config->get();
+        
+        $baseurl = isset($routes['baseurl']) ? $routes['baseurl'] : '';
+        
+        unset($routes['baseurl']);
         
         $collection = new Router\Collection();
         
@@ -111,7 +117,10 @@ class Router {
             $collection->add($routeName, new Router\Route($options));
         }
         
-        return new Router($collection);
+        $router = new Router($collection);
+        $router->setBaseUrl($baseurl);
+        
+        return $router;
     }
     
 }

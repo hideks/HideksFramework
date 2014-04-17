@@ -2,26 +2,32 @@
 
 namespace Hideks;
 
-class Auth {
+class Auth implements Auth\AuthInterface {
     
     private static $instance = null;
     
+    private $session = null;
+    
+    public function __construct() {
+        $this->session = \Hideks\Session::getInstance();
+    }
+    
     public static function getInstance() {
-        if( is_null(self::$instance) ){
+        if( empty(self::$instance) ){
             self::$instance = new self();
         }
         
         return self::$instance;
     }
-    
-    public function write(Auth\Adapter\DatabaseAbstract $adapter) {
+
+    public function write(Auth\Adapter\AdapterAbstract $adapter) {
         $data = $adapter->autenticate();
         
         if ($data) {
-            $_SESSION['HF_Session']['auth'] = true;
+            $this->session->auth = true;
             
             foreach($data as $key => $value){
-                $_SESSION['HF_Session']['user'][$key] = $value;
+                $this->session->$key = $value;
             }
             
             return true;
@@ -31,7 +37,7 @@ class Auth {
     }
     
     public function isLogged() {
-        if (isset($_SESSION['HF_Session']['auth'])) {
+        if (isset($this->session->auth)) {
             return true;
         }
         
@@ -39,7 +45,7 @@ class Auth {
     }
 
     public function logout() {
-        session_destroy();
+        $this->session->destroy();
     }
     
 }

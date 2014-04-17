@@ -5,6 +5,10 @@ namespace Hideks;
 class Config {
     
     private static $instance = null;
+    
+    private $file = null;
+    
+    private $config = array();
 
     public static function getInstance() {
         if( !isset(self::$instance) ){
@@ -15,10 +19,6 @@ class Config {
         
         return self::$instance;
     }
-    
-    private $file = null;
-    
-    private $config = array();
     
     public function find() {
         $dir = APPLICATION_PATH.DS.'configs'.DS;
@@ -60,7 +60,7 @@ class Config {
                 $config = new Config\Ini($this->file);
                 break;
             default:
-                throw new \Exception("The {$file_ext} file extension in not supported in: {$this->file}");
+                throw new \Exception("The file extension: {$file_ext} is not supported in: {$this->file}");
         }
         
         $this->config = $config->get();
@@ -72,7 +72,7 @@ class Config {
         $environment = $this->config['general']['system']['environment'];
         
         if( $environment !== 'production' && $environment !== 'development'){
-            throw new \Exception("The {$environment} environment is not supported!!");
+            throw new \Exception("The environment: {$environment} is not supported!!");
         }
         
         return $this->config[$environment];

@@ -11,9 +11,9 @@ class Application {
     private $_config = array();
     
     public function __construct() {
-        if ( version_compare(PHP_VERSION, '5.3.0', '<') ){
-            throw new \Exception('Hideks Framework requires PHP 5.3 or higher');
-        }
+        set_exception_handler(array(
+            new \Hideks\Debug, 'handler'
+        ));
         
         $this->setConfig(Config::getInstance());
     }
@@ -37,16 +37,11 @@ class Application {
     }
     
     private function setPhpSettings($phpSettings) {
-        if( $this->_environment === 'production' ){
-            $phpSettings['error_reporting'] = 0;
-            $phpSettings['display_errors']  = 0;
-        }
-        
-        error_reporting($phpSettings['error_reporting']);
+        error_reporting(E_ALL | E_STRICT);
 
         date_default_timezone_set($phpSettings['timezone']);
 
-        ini_set('display_errors', $phpSettings['display_errors']);
+        ini_set('display_errors', ($this->_environment === 'production') ? 0 : 1);
     }
     
     private function setMain() {
@@ -54,18 +49,22 @@ class Application {
         
         $path = APPLICATION_PATH.DS.$class.'.php';
         
+        if( !file_exists($path) ){
+            throw new \Exception("The file: application/$class.php not found!!");
+        }
+        
         if( !class_exists($class, false) ){
             require_once($path);
             
             if( !class_exists($class, false) ){
-                throw new \Exception('Main class not found!!');
+                throw new \Exception("The class: $class doesn't exists!!");
             }
         }
         
         $this->_main = new \Main($this);
         
         if( !$this->_main instanceof Application\Main\MainInterface ){
-            throw new \Exception('Main class does not implement \Hideks\Application\Main\MainInterface!!');
+            throw new \Exception("The class: $class doesn't implement \Hideks\Application\Main\MainInterface!!");
         }
         
         return $this;

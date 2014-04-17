@@ -12,27 +12,15 @@ class Request {
     
     private $params;
     
-    public static function getInstance() {
+    public static function getInstance(Router $router) {
         if( is_null(self::$instance) ){
-            self::$instance = new self();
+            self::$instance = new self($router);
         }
         
         return self::$instance;
     }
     
-    public function getController() {
-        return $this->controller;
-    }
-    
-    public function getAction() {
-        return $this->action;
-    }
-
-    public function _getParams($param) {
-        return $this->params[$param];
-    }
-
-    public function dispatch(Router $router) {
+    public function __construct(Router $router) {
         $requestUrl = $_SERVER['REQUEST_URI'];
         
         $route = $router->matchCurrentRequest();
@@ -57,6 +45,19 @@ class Request {
             $parts[] = $part;
         }
         
+        if( ( $parts[0] === 'images' || $parts[0] === 'javascripts' || $parts[0] === 'stylesheets' ) && !file_exists($path) ){
+            $extensions = array(
+                '.jpg', '.png', '.gif', '.ico', '.css', '.js'
+            );
+
+            foreach($extensions as $extension){
+                if( strpos($path, $extension) ){
+                    header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
+                    exit;
+                }
+            }
+        }
+        
         $this->controller = ucfirst($parts[0]);
         
         $action = ( !isset($parts[1]) || is_null($parts[1]) || $parts[1] === 'index' ) ? 'indexAction' : $parts[1];
@@ -76,13 +77,11 @@ class Request {
             $values = array();
             
             foreach($parts as $value){
-                if($index % 2 == 0){
+                if($index++ % 2 == 0){
                     $indexes[] = $value;
                 } else {
                     $values[] = $value;
                 }
-                
-                $index++;
             }
         } else {
             $indexes = array();
@@ -94,8 +93,48 @@ class Request {
         } else {
             $this->params = array();
         }
+    }
+    
+    public function getController() {
+        return $this->controller;
+    }
+    
+    public function setController($controller) {
+        $this->controller = $controller;
+    }
+    
+    public function getAction() {
+        return $this->action;
+    }
+    
+    public function setAction($action) {
+        $this->action = $action;
+    }
+
+    public function _getParams($param) {
+        if( isset($this->params[$param]) ){
+            return $this->params[$param];
+        }
         
-        return $this;
+        return false;
+    }
+    
+    public function setParams(array $params) {
+        $this->params = $params;
+    }
+
+    public function redirectTo($url, array $params = array()) {
+        $status = isset($params['status']) ? $params['status'] : null;
+        
+        if($status){
+            unset($params['status']);
+        }
+        
+        if( isset($status) ){
+            header("location: {$url}", true, $status);
+        } else {
+            header("location: {$url}");
+        }
     }
     
 }

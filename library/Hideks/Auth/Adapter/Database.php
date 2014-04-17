@@ -2,7 +2,7 @@
 
 namespace Hideks\Auth\Adapter;
 
-class Database extends DatabaseAbstract {
+class Database extends AdapterAbstract {
     
     private $connection = null;
     
@@ -18,14 +18,20 @@ class Database extends DatabaseAbstract {
     
     public function setUserColumn($userColumn) {
         $this->userColumn = $userColumn;
+        
+        return $this;
     }
 
     public function setPassColumn($passColumn) {
         $this->passColumn = $passColumn;
+        
+        return $this;
     }
 
     public function setTable($table) {
         $this->table = $table;
+        
+        return $this;
     }
 
     public function autenticate() {

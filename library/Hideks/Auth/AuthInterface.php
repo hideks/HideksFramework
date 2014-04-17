@@ -2,9 +2,9 @@
 
 namespace Hideks\Auth;
 
-class AuthInterface {
+interface AuthInterface {
     
-    public function write(Adapter\DatabaseAbstract $adapter);
+    public function write(Adapter\AdapterAbstract $adapter);
     
     public function isLogged();
     

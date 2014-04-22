@@ -18,10 +18,11 @@ class Logger {
             'format'    => ( isset($options['format']) ) ? $options['format'] : 'text',
             'path'      => "logs/$folder{$date[0]}/{$date[1]}/$date[2]"
         );
-        
 
-        if( ! is_dir($options['path']) ){
-            mkdir($options['path'] ,0777, true) or die("O script não possui permissões para criar pastas!!");
+        if( !is_dir($options['path']) ){
+            if( !mkdir($options['path'] ,0777, true) ){
+                throw new \Exception('Unable to write to <span class="glyphicon glyphicon-home"></span> /public/'.$options['path']);
+            }
         }
         
         switch($options['format']){

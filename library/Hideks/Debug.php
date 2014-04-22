@@ -30,10 +30,14 @@ class Debug {
         $iteration = count($trace);
 
         foreach ($trace as $route) {
-            if (empty($route['args'])) {
+            if( empty($route['args']) ){
                 $route['args'] = "";
             }
-
+            
+            if( isset($route['args'][0]) && is_string($route['args'][0]) ){
+                $route['args'] = $route['args'][0];
+            }
+            
             $routes[] = array(
                 'iteration' => $iteration--,
                 'file' => $this->getShortFileName($route['file']),
@@ -62,7 +66,7 @@ class Debug {
             $string = strpos($fileName, $delimiter);
 
             if ($string) {
-                return '<span class="glyphicon glyphicon-home"></span> /' . substr($fileName, $string);
+                return '<span class="glyphicon glyphicon-home"></span> /'.substr($fileName, $string);
             }
         }
     }
@@ -97,7 +101,6 @@ class Debug {
 
             $front->dispatch();
         }
-            
         
         if( $config['system']['environment'] === 'development' ){
             require_once(realpath(dirname(__FILE__).DS.'..').DS.'Hideks'.DS.'Debug'.DS.'template.phtml');

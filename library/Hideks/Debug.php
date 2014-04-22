@@ -72,8 +72,10 @@ class Debug {
     }
 
     private function dispatch() {
-        $config = \Hideks\Config::getInstance();
-
+        $config = new \Hideks\Config\Ini(APPLICATION_PATH.DS.'configs'.DS.'configuration.ini');
+        $config = $config->get();
+        $config = $config['general'];
+                
         if( $config['system']['environment'] === 'production' ){
             Logger::log(array(
                 "folder"    => "production",
@@ -100,9 +102,7 @@ class Debug {
                   ));
 
             $front->dispatch();
-        }
-        
-        if( $config['system']['environment'] === 'development' ){
+        } else {
             require_once(realpath(dirname(__FILE__).DS.'..').DS.'Hideks'.DS.'Debug'.DS.'template.phtml');
         }
     }

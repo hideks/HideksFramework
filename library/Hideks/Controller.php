@@ -39,6 +39,14 @@ class Controller {
     }
     
     public function renderTo($output, $options = null) {
+        if( !is_writeable(APPLICATION_PATH.DS.'temp'.DS.'cached'.DS) ){
+            throw new \Exception('Unable to write to <span class="glyphicon glyphicon-home"></span> /application/temp/cached/');
+        }
+        
+        if( !is_writeable(APPLICATION_PATH.DS.'temp'.DS.'compiled'.DS) ){
+            throw new \Exception('Unable to write to <span class="glyphicon glyphicon-home"></span> /application/temp/compiled/');
+        }
+        
         if( !method_exists($this, $output) ){
             throw new \Exception('The output: '.$output.' is not supported!!');
         }
@@ -58,11 +66,11 @@ class Controller {
         $view   = (isset($options['view']))     ? $options['view']      : $view;
         $layout = (isset($options['layout']))   ? $options['layout']    : 'layout';
 
-        if(!file_exists(APPLICATION_PATH.DS.'views'.DS.'layouts'.DS.$layout.'.phtml')){
+        if( !file_exists(APPLICATION_PATH.DS.'views'.DS.'layouts'.DS.$layout.'.phtml') ){
             throw new \Exception($layout.' layout not found!!');
         }
 
-        if(!file_exists(APPLICATION_PATH.DS.'views'.DS.$view.'.phtml')){
+        if( !file_exists(APPLICATION_PATH.DS.'views'.DS.$view.'.phtml') ){
             throw new \Exception($view.' view not found!!');
         }
         

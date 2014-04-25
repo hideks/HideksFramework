@@ -21,14 +21,14 @@
                 <div class="panel-body">
                     <div class="jumbotron hf-jumbotron">
                         <h1>Ops!!</h1>
-                        <p><?= $this->message ?></p>
+                        <p><?php echo $this->message; ?></p>
                     </div>
                     <ul class="list-group hf-list-group">
                         <li class="list-group-item">
-                            <p class="hf-no-margin-bottom"><strong>File: </strong><?= $this->file ?></p>
+                            <p class="hf-no-margin-bottom"><strong>File: </strong><?php echo $this->file; ?></p>
                         </li>
                         <li class="list-group-item">
-                            <p class="hf-no-margin-bottom"><strong>Line: </strong><?= $this->line ?></p>
+                            <p class="hf-no-margin-bottom"><strong>Line: </strong><?php echo $this->line; ?></p>
                         </li>
                     </ul>
                     <a class="btn btn-primary hf-right" href="http://framework.hidekscorp.com" target="_blank" role="button">Learn more</a>
@@ -54,10 +54,10 @@
                                 <tbody>
                                     <?php foreach ($this->trace as $key => $value): ?>
                                         <tr>
-                                            <td><?= $value['iteration'] ?></td>
-                                            <td><?= $value['function'] ?></td>
-                                            <td><?= $value['file'] ?></td>
-                                            <td><?= $value['line'] ?></td>
+                                            <td><?php echo $value['iteration']; ?></td>
+                                            <td><?php echo $value['function']; ?></td>
+                                            <td><?php echo $value['file']; ?></td>
+                                            <td><?php echo $value['line']; ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>

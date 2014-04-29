@@ -64,6 +64,10 @@ class Controller {
                     throw new \Exception($layout.' layout not found!!');
                 }
 
+                if(isset($options['noview']) && $options['noview'] === true){
+                    return $this->_smarty->display('layouts'.DS.$layout.'.phtml');
+                }
+
                 if( !file_exists(APPLICATION_PATH.DS.'views'.DS.$view.'.phtml') ){
                     throw new \Exception($view.' view not found!!');
                 }

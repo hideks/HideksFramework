@@ -128,9 +128,12 @@ class Paginator {
             $sequence = array();
 
             for($i = $this->before; $i <= $this->after; $i++){
-                $sequence[] = $router->linkTo($routeName, array(
-                    $paramName => $i
-                ));
+                $sequence[] = array(
+                    'num' => $i,
+                    'url' => $router->linkTo($routeName, array(
+                        $paramName => $i
+                    ))
+                );
             }
 
             $pagination += array(

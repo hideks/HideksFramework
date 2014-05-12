@@ -26,8 +26,8 @@ class Controller {
         return $this->_smarty;
     }
     
-    public function getParam($param) {
-        return $this->_request->_getParams($param);
+    public function getParam($param, $value = false) {
+        return $this->_request->_getParams($param, $value);
     }
     
     public function linkTo($routeName, array $params = array()) {
@@ -94,6 +94,13 @@ class Controller {
                 $view = $controller.DS.$action.'.phtml';
 
                 $this->_smarty->display($view);
+                break;
+            case 'txt':
+                header('Content-Type: text/plain; charset=utf-8');
+                
+                foreach($options as $line){
+                    echo $line."\n";
+                }
                 break;
             default:
                 throw new \Exception('The output: '.$output.' is not supported!!');

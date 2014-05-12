@@ -29,8 +29,12 @@ class Route {
     public function setPath($path) {
         $path = (string) $path;
         
-        if(substr($path,-1) !== '/'){
-            $path .= '/';
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+        
+        if( empty($extension) ) {
+            if(substr($path,-1) !== '/'){
+                $path .= '/';
+            }
         }
         
         $this->_path = $path;

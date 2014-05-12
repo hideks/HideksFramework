@@ -111,12 +111,12 @@ class Request {
         $this->action = $action;
     }
 
-    public function _getParams($param) {
+    public function _getParams($param, $value = false) {
         if( isset($this->params[$param]) ){
             return $this->params[$param];
         }
         
-        return false;
+        return $value;
     }
     
     public function setParams(array $params) {

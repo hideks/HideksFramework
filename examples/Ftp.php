@@ -13,7 +13,10 @@ class Ftp extends \Hideks\Controller {
         // Seleciona o diretório
         $ftp->setDirectory('/directory/path/');
         
-        // Envia o arquivo para o servidor de ftp
+        // Baixa o arquivo do servidor de ftp para local
+        $ftp->getFile('local_filename.jpg', 'remote_filename.jpg', FTP_BINARY);
+        
+        // Envia o arquivo local para o servidor de ftp
         $ftp->setFile('filename.jpg', $_FILES['file']['tmp_name'], FTP_BINARY);
         
         // Lista o diretório

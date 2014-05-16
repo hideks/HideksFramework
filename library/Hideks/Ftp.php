@@ -20,6 +20,10 @@ class Ftp {
         ftp_chdir($this->connection, $directory);
     }
     
+    public function getFile($local_file, $remote_file, $mode) {
+        return ftp_get($this->connection, $local_file, $remote_file, $mode);
+    }
+    
     public function setFile($remote_file, $local_file, $mode) {
         ftp_put($this->connection, $remote_file, $local_file, $mode);
     }

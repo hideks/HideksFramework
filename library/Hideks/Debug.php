@@ -93,8 +93,8 @@ class Debug {
             
             $front = new Application\FrontController();
 
-            $front->setController('Error')
-                  ->setAction('indexAction')
+            $front->setController('error')
+                  ->setAction('index')
                   ->setParams(array(
                       'error_handler' => array(
                           'code'        => ($this->code) ? 404 : 500

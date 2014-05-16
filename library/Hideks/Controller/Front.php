@@ -35,8 +35,7 @@ class Front {
     }
     
     public function dispatch() {
-        // Inicia o controller da requisição
-        $controller = $this->_request->getController();
+        $controller = ucfirst($this->_request->getController());
         
         if( !file_exists(APPLICATION_PATH.DS.'controllers'.DS.$controller.'.php')){
             throw new \Exception($controller.' controller not found!!', 1);
@@ -46,11 +45,10 @@ class Front {
         
         $controller = new $controller($this);
         
-        // Inicia a action da requisição
-        $action = $this->_request->getAction();
+        $action = "{$this->_request->getAction()}Action";
         
         if( !method_exists($controller, $action) ){
-            throw new \Exception($action.' action not found!!', 1);
+            throw new \Exception($this->_request->getAction().' action not found!!', 1);
         }
         
         $controller->$action();

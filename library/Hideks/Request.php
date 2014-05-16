@@ -46,22 +46,13 @@ class Request {
         }
         
         if( ( $parts[0] === 'images' || $parts[0] === 'javascripts' || $parts[0] === 'stylesheets' ) && !file_exists($path) ){
-            $extensions = array(
-                '.jpg', '.png', '.gif', '.ico', '.css', '.js'
-            );
-
-            foreach($extensions as $extension){
-                if( strpos($path, $extension) ){
-                    header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
-                    exit;
-                }
-            }
+            header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
+            exit;
         }
         
-        $this->controller = ucfirst($parts[0]);
+        $this->controller = $parts[0];
         
-        $action = ( !isset($parts[1]) || is_null($parts[1]) || $parts[1] === 'index' ) ? 'indexAction' : $parts[1];
-        $action = ($action === 'indexAction') ? $action : $action.'Action';
+        $action = ( !isset($parts[1]) || is_null($parts[1]) || $parts[1] === 'index' ) ? 'index' : $parts[1];
         
         $this->action = $action;
         
@@ -111,7 +102,11 @@ class Request {
         $this->action = $action;
     }
 
-    public function _getParams($param, $value = false) {
+    public function getParams() {
+        return $this->params;
+    }
+    
+    public function getParam($param, $value = false) {
         if( isset($this->params[$param]) ){
             return $this->params[$param];
         }

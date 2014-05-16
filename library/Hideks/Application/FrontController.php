@@ -38,7 +38,9 @@ class FrontController {
         }
 
         if( $config['smarty']['force_compile'] ){
-            $config['smarty']['caching'] = 0;
+            $config['smarty']['caching'] = \Smarty::CACHING_OFF;
+        } else {
+            $config['smarty']['caching'] = \Smarty::CACHING_LIFETIME_SAVED;
         }
         
         $smarty = new \Smarty();

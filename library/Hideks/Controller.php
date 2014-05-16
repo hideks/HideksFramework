@@ -9,6 +9,12 @@ class Controller {
     private $_request;
     
     private $_smarty;
+    
+    private $controller;
+    
+    private $action;
+    
+    private $params;
 
     public function __construct($frontController) {
         $this->_router = $frontController->getRouter();
@@ -16,6 +22,12 @@ class Controller {
         $this->_request = $frontController->getRequest();
         
         $this->_smarty = $frontController->getSmarty();
+        
+        $this->controller = $this->_request->getController();
+
+        $this->action = $this->_request->getAction();
+        
+        $this->params = $this->_request->getParams();
     }
     
     public function getRequest() {
@@ -27,7 +39,7 @@ class Controller {
     }
     
     public function getParam($param, $value = false) {
-        return $this->_request->_getParams($param, $value);
+        return $this->_request->getParam($param, $value);
     }
     
     public function linkTo($routeName, array $params = array()) {
@@ -51,28 +63,27 @@ class Controller {
             case 'html':
                 header('Content-Type: text/html; charset=utf-8');
 
-                $controller = strtolower( $this->_request->getController() );
-
-                $action = str_replace('Action', '', $this->_request->getAction());
-
-                $view = $controller.DS.$action;
-
-                $view   = (isset($options['view']))     ? $options['view']      : $view;
-                $layout = (isset($options['layout']))   ? $options['layout']    : 'layout';
+                $layout = isset($options['layout']) ? $options['layout'] : 'layout';
 
                 if( !file_exists(APPLICATION_PATH.DS.'views'.DS.'layouts'.DS.$layout.'.phtml') ){
                     throw new \Exception($layout.' layout not found!!');
                 }
+                
+                $this->_smarty->setCacheLifetime(isset($options['expiresAt']) ? $options['expiresAt'] : 3600);
 
                 if(isset($options['noview']) && $options['noview'] === true){
                     return $this->_smarty->display('layouts'.DS.$layout.'.phtml');
                 }
+                
+                $view = $this->controller.DS.$this->action;
+
+                $view = isset($options['view']) ? $options['view'] : $view;
 
                 if( !file_exists(APPLICATION_PATH.DS.'views'.DS.$view.'.phtml') ){
                     throw new \Exception($view.' view not found!!');
                 }
-
-                $this->_smarty->display('extends:layouts'.DS.$layout.'.phtml|'.$view.'.phtml');
+                
+                $this->_smarty->display('extends:layouts'.DS.$layout.'.phtml|'.$view.'.phtml', $this->generateUniquePageId());
                 break;
             case 'json':
                 header('Content-Type: application/json; charset=utf-8');
@@ -87,13 +98,7 @@ class Controller {
                 echo '<?xml version="1.0" encoding="utf-8" ?>';
                 echo '<?xml-stylesheet type="text/css" href="/stylesheets/xml.css" ?>';
 
-                $controller = strtolower( $this->_request->getController() );
-
-                $action = str_replace('Action', '', $this->_request->getAction());
-
-                $view = $controller.DS.$action.'.phtml';
-
-                $this->_smarty->display($view);
+                $this->_smarty->display($this->controller.DS.$this->action.'.phtml');
                 break;
             case 'txt':
                 header('Content-Type: text/plain; charset=utf-8');
@@ -105,6 +110,38 @@ class Controller {
             default:
                 throw new \Exception('The output: '.$output.' is not supported!!');
         }
+    }
+    
+    public function renderFromCache($options = null) {
+        $layout = isset($options['layout']) ? $options['layout'] : 'layout';
+
+        if(isset($options['noview']) && $options['noview'] === true){
+            $template = 'layouts'.DS.$layout.'.phtml';
+        } else {
+            $template = 'extends:layouts'.DS.$layout.'.phtml|'.$this->controller.DS.$this->action.'.phtml';
+        }
+        
+        if( isset($options['clear']) && $options['clear'] === true ){
+            $this->_smarty->clearCache($template, $this->generateUniquePageId());
+        }
+
+        if( $this->_smarty->isCached($template, $this->generateUniquePageId()) ) {
+            $this->_smarty->display($template, $this->generateUniquePageId());
+            
+            exit();
+        }
+    }
+    
+    private function generateUniquePageId() {
+        $hash = "{$this->controller}_{$this->action}";
+        
+        foreach($this->params as $param){
+            if(!is_array($param)){
+                $hash .= "_{$param}";
+            }
+        }
+        
+        return $hash;
     }
     
 }

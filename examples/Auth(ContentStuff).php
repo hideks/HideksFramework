@@ -25,7 +25,7 @@ class Auth extends \Hideks\Controller {
             $authAdapter = new \Hideks\Auth\Adapter\ContentStuff();
             
             $authAdapter->setEnterpriseId(80)
-                        ->setEnterpriseUser('BP_ASS')
+                        ->setEnterpriseUser('BP_Ass')
                         ->setEnterprisePass('FGUdngw5sfga1As#')
                         ->setEnterpriseProduct(730);
             
@@ -54,11 +54,11 @@ class Auth extends \Hideks\Controller {
     }
     
     private function parseResponse($response) {
-        if( $response['Status_id'] === 1 ){
+        if( $response['Status_id'] === '1' ){
             return true;
         }
         
-        if( $response['Status_id'] === 3 ){
+        if( $response['Status_id'] === '3' ){
             return array(
                 'errors' => array(
                     'Não identificamos um pagamento ativo. Entre em contato conosco...'

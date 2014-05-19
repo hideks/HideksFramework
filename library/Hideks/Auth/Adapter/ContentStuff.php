@@ -39,9 +39,7 @@ class ContentStuff extends AdapterAbstract {
     }
     
     public function getResponse() {
-        $this->response = simplexml_load_string($this->response);
-        
-        return (array) $this->response;
+        return $this->response;
     }
     
     public function autenticate() {
@@ -70,13 +68,9 @@ class ContentStuff extends AdapterAbstract {
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
         curl_exec($curl);
 
-        $this->response = curl_exec($curl);
+        $this->response = (array) simplexml_load_string( curl_exec($curl) );
         
         curl_close($curl);
-        
-        if( $this->response['Status_id'] === '-1' || $this->response['Status_id'] === '0'){
-            return false;
-        }
         
         if($this->response['Status_id'] === '1'){
             return array(
@@ -84,6 +78,8 @@ class ContentStuff extends AdapterAbstract {
                 'us_email'  => $this->username
             );
         }
+        
+        return false;
     }
     
 }

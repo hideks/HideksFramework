@@ -38,6 +38,14 @@ class Debug {
                 $route['args'] = $route['args'][0];
             }
             
+            $route['file'] = isset($route['file']) ? $this->getShortFileName($route['file']) : '';
+            
+            $route['line'] = isset($route['line']) ? $route['line'] : '';
+            
+            $route['class'] = isset($route['class']) ? $route['class'] : '';
+            
+            $route['type'] = isset($route['type']) ? $route['type'] : '';
+            
             $routes[] = array(
                 'iteration' => $iteration--,
                 'file' => $this->getShortFileName($route['file']),

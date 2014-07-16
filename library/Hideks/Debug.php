@@ -74,7 +74,7 @@ class Debug {
             $string = strpos($fileName, $delimiter);
 
             if ($string) {
-                return '<span class="glyphicon glyphicon-home"></span> /'.substr($fileName, $string);
+                return '<span class="glyphicon glyphicon-home"></span> '.DS.substr($fileName, $string);
             }
         }
     }

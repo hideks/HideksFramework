@@ -68,7 +68,7 @@ class Router {
 
             foreach ($keys as $key => $name) {
                 if (isset($matches[$key + 1])) {
-                    $params .= DS.$name.DS.$matches[$key + 1];
+                    $params .= "/{$name}/{$matches[$key + 1]}";
                 }
             }
         }

@@ -38,6 +38,10 @@ class Debug {
                 $route['args'] = $route['args'][0];
             }
             
+            if( isset($route['args']) && is_array($route['args']) ){
+                $route['args'] = 'Array';
+            }
+            
             $route['file'] = isset($route['file']) ? $this->getShortFileName($route['file']) : '';
             
             $route['line'] = isset($route['line']) ? $route['line'] : '';

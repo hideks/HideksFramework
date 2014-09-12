@@ -53,16 +53,10 @@ class FrontController {
         $smarty->force_compile   = $config['smarty']['force_compile'];
         
         if( $config['system']['environment'] === 'production' ){
-            $smarty->registerFilter('pre', array($this, 'minify_html'));
+            $smarty->loadFilter('output', 'trimwhitespace');
         }
         
         $this->_front->setSmarty($smarty);
-    }
-    
-    public function minify_html($tpl_output, \Smarty_Internal_Template $template) {
-        $tpl_output = preg_replace('![\t ]*[\r\n]+[\t ]*!', '', $tpl_output);
-
-        return $tpl_output;
     }
     
     public function setController($controller) {

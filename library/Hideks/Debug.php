@@ -113,7 +113,7 @@ class Debug {
                       )
                   ));
 
-            $status = $this->code === 404 ? '404 Not Found' : '500 Internal Server Error';
+            $status = $this->code ? '404 Not Found' : '500 Internal Server Error';
             
             header(filter_input(INPUT_SERVER, 'SERVER_PROTOCOL') . " " . $status, true, $this->code);
             

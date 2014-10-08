@@ -94,11 +94,11 @@ class Debug {
                 "title"     => null,
                 "content"   => array(
                     'ERROR_MESSAGE'     => $this->message,
-                    'HTTP_HOST'         => $_SERVER['HTTP_HOST'],
-                    'HTTP_USER_AGENT'   => $_SERVER['HTTP_USER_AGENT'],
-                    'REMOTE_ADDR'       => $_SERVER['REMOTE_ADDR'],
-                    'REQUEST_METHOD'    => $_SERVER['REQUEST_METHOD'],
-                    'REQUEST_URI'       => $_SERVER['REQUEST_URI']
+                    'HTTP_HOST'         => filter_input(INPUT_SERVER, 'HTTP_HOST'),
+                    'HTTP_USER_AGENT'   => filter_input(INPUT_SERVER, 'HTTP_USER_AGENT'),
+                    'REMOTE_ADDR'       => filter_input(INPUT_SERVER, 'REMOTE_ADDR'),
+                    'REQUEST_METHOD'    => filter_input(INPUT_SERVER, 'REQUEST_METHOD'),
+                    'REQUEST_URI'       => filter_input(INPUT_SERVER, 'REQUEST_URI')
                 ),
                 "format"    => "xml"
             ));
@@ -113,6 +113,10 @@ class Debug {
                       )
                   ));
 
+            $status = $this->code === 404 ? '404 Not Found' : '500 Internal Server Error';
+            
+            header(filter_input(INPUT_SERVER, 'SERVER_PROTOCOL') . " " . $status, true, $this->code);
+            
             $front->dispatch();
         } else {
             require_once(realpath(dirname(__FILE__).DS.'..').DS.'Hideks'.DS.'Debug'.DS.'template.tpl');

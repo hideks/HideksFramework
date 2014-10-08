@@ -65,25 +65,25 @@ class Controller {
 
                 $layout = isset($options['layout']) ? $options['layout'] : 'layout';
 
-                if( !file_exists(APPLICATION_PATH.DS.'views'.DS.'layouts'.DS.$layout.'.phtml') ){
+                if( !file_exists(APPLICATION_PATH.DS.'views'.DS.'layouts'.DS.$layout.'.tpl') ){
                     throw new \Exception($layout.' layout not found!!');
                 }
                 
                 $this->_smarty->setCacheLifetime(isset($options['expiresAt']) ? $options['expiresAt'] : 3600);
 
                 if(isset($options['noview']) && $options['noview'] === true){
-                    return $this->_smarty->display('layouts'.DS.$layout.'.phtml');
+                    return $this->_smarty->display('layouts'.DS.$layout.'.tpl');
                 }
                 
                 $view = $this->controller.DS.$this->action;
 
                 $view = isset($options['view']) ? $options['view'] : $view;
 
-                if( !file_exists(APPLICATION_PATH.DS.'views'.DS.$view.'.phtml') ){
+                if( !file_exists(APPLICATION_PATH.DS.'views'.DS.$view.'.tpl') ){
                     throw new \Exception($view.' view not found!!');
                 }
                 
-                $this->_smarty->display('extends:layouts'.DS.$layout.'.phtml|'.$view.'.phtml', $this->generateUniquePageId());
+                $this->_smarty->display('extends:layouts'.DS.$layout.'.tpl|'.$view.'.tpl', $this->generateUniquePageId());
                 break;
             case 'json':
                 header('Content-Type: application/json; charset=utf-8');
@@ -98,7 +98,7 @@ class Controller {
                 echo '<?xml version="1.0" encoding="utf-8" ?>';
                 echo '<?xml-stylesheet type="text/css" href="/stylesheets/xml.css" ?>';
 
-                $this->_smarty->display($this->controller.DS.$this->action.'.phtml');
+                $this->_smarty->display($this->controller.DS.$this->action.'.tpl');
                 break;
             case 'txt':
                 header('Content-Type: text/plain; charset=utf-8');
@@ -116,9 +116,9 @@ class Controller {
         $layout = isset($options['layout']) ? $options['layout'] : 'layout';
 
         if(isset($options['noview']) && $options['noview'] === true){
-            $template = 'layouts'.DS.$layout.'.phtml';
+            $template = 'layouts'.DS.$layout.'.tpl';
         } else {
-            $template = 'extends:layouts'.DS.$layout.'.phtml|'.$this->controller.DS.$this->action.'.phtml';
+            $template = 'extends:layouts'.DS.$layout.'.tpl|'.$this->controller.DS.$this->action.'.tpl';
         }
         
         if( isset($options['clear']) && $options['clear'] === true ){

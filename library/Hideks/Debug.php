@@ -115,7 +115,7 @@ class Debug {
 
             $front->dispatch();
         } else {
-            require_once(realpath(dirname(__FILE__).DS.'..').DS.'Hideks'.DS.'Debug'.DS.'template.phtml');
+            require_once(realpath(dirname(__FILE__).DS.'..').DS.'Hideks'.DS.'Debug'.DS.'template.tpl');
         }
     }
 

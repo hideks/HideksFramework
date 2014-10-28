@@ -237,12 +237,11 @@ final class Paginator {
             
         $isPageTwo = $this->currentPage === 2 ? 1 : 0; 
 
-        $options = array();
+        $options = array(
+            'page' => $this->previousPage
+        );
 
-        if(!$isPageTwo){
-            $options['page'] = $this->previousPage;
-            $options += $this->params;
-        }
+        $options += $this->params;
 
         $prevLink = $this->createElement($prev, 'a', array(
             'attributes' => array(

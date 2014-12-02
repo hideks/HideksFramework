@@ -335,6 +335,8 @@ final class Paginator {
             } else if($this->previousPage === $i) {
                 $previous = $this->createElement($parent, 'li');
                 
+                $isPageTwo = $this->currentPage === 2 ? 1 : 0; 
+                
                 $options = array(
                     'page' => $i
                 );
@@ -343,8 +345,8 @@ final class Paginator {
                 
                 $this->createElement($previous, 'a', array(
                     'attributes' => array(
-                        'href' => $this->router->linkTo($this->routes[1], $options),
-                        'rel' => $this->previousPage === 1 ? 'start prev' : 'prev'
+                        'href' => $this->router->linkTo($this->routes[!$isPageTwo], $options),
+                        'rel' => $isPageTwo ? 'start prev' : 'prev'
                     ),
                     'text' => $i
                 ));
@@ -369,7 +371,7 @@ final class Paginator {
                 
                 $this->createElement($first, 'a', array(
                     'attributes' => array(
-                        'href' => $this->router->linkTo($this->routes[0]),
+                        'href' => $this->router->linkTo($this->routes[0], $this->params),
                         'rel' => 'start'
                     ),
                     'text' => $i

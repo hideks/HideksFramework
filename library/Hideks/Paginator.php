@@ -400,7 +400,7 @@ final class Paginator {
         
         $this->createElement($first, 'a', array(
             'attributes' => array(
-                'href'  => $this->router->linkTo($this->routes[0]),
+                'href'  => $this->router->linkTo($this->routes[0], $this->params),
                 'rel'   => 'start'
             ),
             'text' => $this->firstPage
